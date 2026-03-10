@@ -1,24 +1,37 @@
-import Hotel from "../models/Hotel.js";
-import User from "../models/User.js";
+export const requestHotelOwnerAccess = async (req, res) => {
+  try {
+    const { name, address, contact, city } = req.body;
+    const user = req.user;
 
-export const registerHotel = async (req, res) => {
-    try {
-        const {name, address, contact, city} = req.body;
-        const owner = req.user._id
+    if (user.role === "hotelOwner") {
+      return res.json({
+        success: false,
+        message: "You are already a hotel owner",
+      });
+    }
 
-       // Check if User Already Registered
-       const hotel = await Hotel.findOne({owner})
-       if(hotel){
-          return res.json({ success: false, message: "Hotel Already Registered" })
-       }
+    if (user.ownerRequestStatus === "pending") {
+      return res.json({
+        success: false,
+        message: "You already have a pending request",
+      });
+    }
 
-       await Hotel.create({name, address, contact, city, owner});
+    user.ownerRequestStatus = "pending";
+    user.requestedHotelData = {
+      name,
+      address,
+      contact,
+      city,
+    };
 
-       await User.findByIdAndUpdate(owner, {role: "hotelOwner"});
+    await user.save();
 
-       res.json({success: true, message: "Hotel Registered Successfully"})
-
-     } catch (error) {
-        res.json({success: false, message: error.message})
-     }
-}
+    res.json({
+      success: true,
+      message: "Owner request submitted successfully",
+    });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
