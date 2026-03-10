@@ -1,0 +1,20 @@
+import React from "react";
+import { Link } from "react-router-dom";
+import { assets } from "../../assets/assets";
+import { UserButton } from "@clerk/clerk-react";
+
+const Navbar = () => {
+    return (
+        <div className="flex items-center justify-between px-6 border-b py-3 bg-white">
+
+            <Link to="/">
+                <img src={assets.logo} className="h-9 invert opacity-80" />
+            </Link>
+
+            <UserButton />
+
+        </div>
+    );
+};
+
+export default Navbar;
