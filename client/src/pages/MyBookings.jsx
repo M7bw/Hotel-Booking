@@ -28,21 +28,21 @@ const [bookings, setBookings] = useState([])
     }
 
 
-    const handlePayment = async (bookingId) => {
+   const handlePayment = async (bookingId)=>{
         try {
-            const { data } = await axios.post("/api/bookings/stripe-payment", {
-                bookingId,
-            });
+            const { data } = await axios.post(`/api/bookings/stripe-payment`,
+            {bookingId}, {headers: {
+                Authorization: `Bearer ${await getToken()}` }})
 
-            if (data.success && data.url) {
-                window.location.href = data.url;
+            if (data.success) {
+                window.location.href = data.url
             } else {
-                toast.error(data.message || "Failed to start payment");
+                toast.error(data.message)
             }
-        } catch (error) {
-            toast.error(error?.response?.data?.message || error.message);
-        }
-    };
+          } catch (error) {
+            toast.error(error.message)
+          }
+    }
 
     useEffect(()=>{
         if (user){

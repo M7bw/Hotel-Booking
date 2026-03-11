@@ -192,9 +192,6 @@ export const stripePayment = async (req, res) => {
   try {
     const { bookingId } = req.body;
 
-    console.log("STRIPE PAYMENT HIT");
-    console.log("BOOKING ID:", bookingId);
-
     const booking = await Booking.findById(bookingId);
     if (!booking) {
       return res.json({ success: false, message: "Booking not found" });
@@ -207,9 +204,6 @@ export const stripePayment = async (req, res) => {
 
     const totalPrice = booking.totalPrice;
     const { origin } = req.headers;
-
-    console.log("ORIGIN:", origin);
-    console.log("STRIPE KEY EXISTS:", !!process.env.STRIPE_SECRET_KEY);
 
     const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -229,18 +223,16 @@ export const stripePayment = async (req, res) => {
     const session = await stripeInstance.checkout.sessions.create({
       line_items,
       mode: "payment",
-      success_url: `${origin}/loader/my-bookings?bookingId=${bookingId}`,
+      success_url: `${origin}/loader/my-bookings`,
       cancel_url: `${origin}/my-bookings`,
       metadata: {
         bookingId,
       },
     });
 
-    console.log("STRIPE SESSION URL:", session.url);
-
     res.json({ success: true, url: session.url });
   } catch (error) {
     console.log("STRIPE PAYMENT ERROR:", error);
-    res.json({ success: false, message: error.message || "Payment failed" });
+    res.json({ success: false, message: "Payment failed" });
   }
 };
