@@ -3,19 +3,17 @@ import { NavLink } from "react-router-dom";
 import { assets } from "../../assets/assets";
 
 const Sidebar = () => {
-
     const links = [
         { name: "Dashboard", path: "/admin", icon: assets.dashboardIcon },
         { name: "Users", path: "/admin/users", icon: assets.listIcon },
+        { name: "Owner Requests", path: "/admin/owner-requests", icon: assets.listIcon },
         { name: "Hotels", path: "/admin/hotels", icon: assets.addIcon },
         { name: "Rooms", path: "/admin/rooms", icon: assets.listIcon },
     ];
 
     return (
         <div className="w-64 border-r h-full pt-4">
-
             {links.map((item, index) => (
-
                 <NavLink
                     key={index}
                     to={item.path}
@@ -30,9 +28,7 @@ const Sidebar = () => {
                     <img src={item.icon} className="h-5" />
                     {item.name}
                 </NavLink>
-
             ))}
-
         </div>
     );
 };

@@ -1,10 +1,13 @@
 import mongoose from "mongoose";
 
-const userSchema = mongoose.Schema(
+const userSchema = new mongoose.Schema(
   {
     _id: { type: String, required: true },
-    username: { type: String, required: true },
-    email: { type: String, required: true },
+
+    username: { type: String, required: true, trim: true },
+
+    email: { type: String, required: true, trim: true },
+
     image: { type: String, required: true },
 
     role: {
@@ -31,7 +34,7 @@ const userSchema = mongoose.Schema(
       city: { type: String, default: "" },
     },
 
-    recentSearchedCities: [{ type: String, required: true }],
+    recentSearchedCities: [{ type: String }],
   },
   { timestamps: true }
 );

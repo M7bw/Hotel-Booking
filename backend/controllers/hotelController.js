@@ -3,6 +3,13 @@ export const requestHotelOwnerAccess = async (req, res) => {
     const { name, address, contact, city } = req.body;
     const user = req.user;
 
+    if (!name || !address || !contact || !city) {
+      return res.json({
+        success: false,
+        message: "All hotel fields are required",
+      });
+    }
+
     if (user.role === "hotelOwner") {
       return res.json({
         success: false,

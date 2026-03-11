@@ -13,13 +13,13 @@ import AddRoom from './pages/hotelOwner/AddRoom';
 import ListRoom from './pages/hotelOwner/ListRoom';
 import { Toaster } from 'react-hot-toast';
 import { useAppContext } from './conext/AppContext';
-
 import AdminLayout from './pages/admin/Layout';
 import AdminDashboard from './pages/admin/Dashboard';
 import Users from './pages/admin/Users';
 import OwnerRequests from './pages/admin/OwnerRequests';
 import Hotels from './pages/admin/Hotels';
 import Rooms from './pages/admin/Rooms';
+import Loader from './Components/Loader';
 
 const App = () => {
   const pathname = useLocation().pathname;
@@ -40,6 +40,7 @@ const App = () => {
           <Route path='/rooms' element={<AllRooms />} />
           <Route path='/rooms/:id' element={<RoomDetails />} />
           <Route path='/my-bookings' element={<MyBookings />} />
+          <Route path='/loader/:nextUrl' element={<Loader />} />
 
           <Route path='/owner' element={<Layout />}>
             <Route index element={<Dashboard />} />

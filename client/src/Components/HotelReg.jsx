@@ -16,12 +16,18 @@ const HotelReg = () => {
     const onSubmitHandler = async (event)=>{
         try {
             event.preventDefault();
-            const {data} = await axios.post(`/api/hotels/`, {name, contact, address, city}, {headers: {Authorization: `Bearer ${await getToken()}
-            `}})
+            const { data } = await axios.post(
+                `${import.meta.env.VITE_BACKEND_URL}/api/hotels/request-owner-access`,
+                { name, contact, address, city },
+                {
+                    headers: {
+                        Authorization: `Bearer ${await getToken()}`
+                    }
+                }
+            );
 
             if(data.success){
                 toast.success(data.message)
-                setIsOwner(true)
                 setShowHotelReg(false);
             }else{
                 toast.error(data.message)

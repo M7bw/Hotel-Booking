@@ -17,7 +17,7 @@ const Users = () => {
                 toast.error(res.data.message);
             }
         } catch (error) {
-            toast.error(error.message);
+            toast.error(error?.response?.data?.message || error.message);
         }
     };
 
@@ -28,9 +28,11 @@ const Users = () => {
             if (res.data.success) {
                 toast.success(res.data.message);
                 fetchUsers();
+            } else {
+                toast.error(res.data.message);
             }
         } catch (error) {
-            toast.error(error.message);
+            toast.error(error?.response?.data?.message || error.message);
         }
     };
 
@@ -44,9 +46,11 @@ const Users = () => {
             if (res.data.success) {
                 toast.success(res.data.message);
                 fetchUsers();
+            } else {
+                toast.error(res.data.message);
             }
         } catch (error) {
-            toast.error(error.message);
+            toast.error(error?.response?.data?.message || error.message);
         }
     };
 
@@ -69,6 +73,7 @@ const Users = () => {
                             <th className="p-3">Name</th>
                             <th className="p-3">Email</th>
                             <th className="p-3">Role</th>
+                            <th className="p-3">Blocked</th>
                             <th className="p-3 text-center">Actions</th>
                         </tr>
                     </thead>
@@ -79,28 +84,33 @@ const Users = () => {
                                 <td className="p-3">{user.username}</td>
                                 <td className="p-3">{user.email}</td>
                                 <td className="p-3">{user.role}</td>
+                                <td className="p-3">{user.isBlocked ? "Yes" : "No"}</td>
 
                                 <td className="p-3 flex gap-2 justify-center">
+                                    {user.role !== "admin" && (
+                                        <>
+                                            <button
+                                                onClick={() =>
+                                                    changeRole(
+                                                        user._id,
+                                                        user.role === "hotelOwner" ? "user" : "hotelOwner"
+                                                    )
+                                                }
+                                                className="bg-blue-100 px-3 py-1 rounded text-blue-600 text-xs cursor-pointer"
+                                            >
+                                                {user.role === "hotelOwner"
+                                                    ? "Set as User"
+                                                    : "Set as Owner"}
+                                            </button>
 
-                                    <button
-                                        onClick={() =>
-                                            changeRole(
-                                                user._id,
-                                                user.role === "hotelOwner" ? "user" : "hotelOwner"
-                                            )
-                                        }
-                                        className="bg-blue-100 px-3 py-1 rounded text-blue-600 text-xs"
-                                    >
-                                        Change Role
-                                    </button>
-
-                                    <button
-                                        onClick={() => toggleBlock(user._id)}
-                                        className="bg-red-100 px-3 py-1 rounded text-red-600 text-xs"
-                                    >
-                                        Block
-                                    </button>
-
+                                            <button
+                                                onClick={() => toggleBlock(user._id)}
+                                                className="bg-red-100 px-3 py-1 rounded text-red-600 text-xs cursor-pointer"
+                                            >
+                                                {user.isBlocked ? "Unblock" : "Block"}
+                                            </button>
+                                        </>
+                                    )}
                                 </td>
                             </tr>
                         ))}
