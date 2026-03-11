@@ -1,40 +1,72 @@
-import express from "express"
+import express from "express";
 import "dotenv/config";
 import cors from "cors";
+import { clerkMiddleware } from "@clerk/express";
+
 import connectDB from "./configs/db.js";
-import { clerkMiddleware } from '@clerk/express'
+import connectCloudinary from "./configs/cloudinary.js";
+
 import clerkWebhooks from "./controllers/clerkWebhooks.js";
+import { stripeWebhooks } from "./controllers/stripeWebhooks.js";
+
 import userRouter from "./routes/userRoutes.js";
 import hotelRouter from "./routes/hotelRoutes.js";
-import connectCloudinary from "./configs/cloudinary.js";
 import roomRouter from "./routes/roomRoutes.js";
 import bookingRouter from "./routes/bookingRoutes.js";
 import adminRouter from "./routes/adminRoutes.js";
-import { stripeWebhooks } from "./controllers/stripeWebhooks.js";
 
-connectDB()
-connectCloudinary();
+const app = express();
 
-const app = express()
+// Connect services once
+let isConnected = false;
 
-app.use(cors())
-app.use(clerkMiddleware())
+const initApp = async () => {
+  if (!isConnected) {
+    await connectDB();
+    connectCloudinary();
+    isConnected = true;
+  }
+};
 
-// API to listen to Stripe Webhooks
-app.post( "/api/stripe", express.raw({ type: "application/json" }), stripeWebhooks)
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+  })
+);
 
+app.use(clerkMiddleware());
 
+// Stripe webhook must come before express.json()
+app.post(
+  "/api/stripe",
+  express.raw({ type: "application/json" }),
+  stripeWebhooks
+);
 
-app.use(express.json())
+// Clerk webhook if you use it
+app.post(
+  "/api/clerk",
+  express.raw({ type: "application/json" }),
+  clerkWebhooks
+);
 
-app.get('/', (req, res)=> res.send("API is working"))
-app.use('/api/user', userRouter)
-app.use('/api/hotels', hotelRouter)
-app.use('/api/rooms', roomRouter)
-app.use('/api/bookings', bookingRouter)
+app.use(express.json());
+
+app.get("/", async (req, res) => {
+  await initApp();
+  res.send("API is working");
+});
+
+app.use(async (req, res, next) => {
+  await initApp();
+  next();
+});
+
+app.use("/api/user", userRouter);
+app.use("/api/hotels", hotelRouter);
+app.use("/api/rooms", roomRouter);
+app.use("/api/bookings", bookingRouter);
 app.use("/api/admin", adminRouter);
 
-
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, ()=> console.log(`Server running on port ${PORT}`));
+export default app;
