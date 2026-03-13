@@ -56,7 +56,7 @@ const Rooms = () => {
                             <th className="p-3">Hotel</th>
                             <th className="p-3">Owner</th>
                             <th className="p-3">Owner Email</th>
-                            <th className="p-3">Price</th>
+                            <th className="p-3">Price </th>
                             <th className="p-3">Actions</th>
                         </tr>
                     </thead>
@@ -68,7 +68,7 @@ const Rooms = () => {
                                 <td className="p-3">{room.hotel?.name || "-"}</td>
                                 <td className="p-3">{room.hotel?.owner?.username || "-"}</td>
                                 <td className="p-3">{room.hotel?.owner?.email || "-"}</td>
-                                <td className="p-3">{room.pricePerNight || 0}</td>
+                                <td className="p-3">{room.pricePerNight || 0} $</td>
                                 <td className="p-3">
                                     <button
                                         onClick={() => deleteRoom(room._id)}

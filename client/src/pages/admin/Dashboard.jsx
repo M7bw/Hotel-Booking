@@ -37,7 +37,7 @@ const Dashboard = () => {
                 <div>Total Hotels: {data.totalHotels}</div>
                 <div>Total Rooms: {data.totalRooms}</div>
                 <div>Total Bookings: {data.totalBookings}</div>
-                <div>Total Revenue: {data.totalRevenue}</div>
+                <div>Total Revenue: {data.totalRevenue} $</div>
             </div>
         </div>
     );
