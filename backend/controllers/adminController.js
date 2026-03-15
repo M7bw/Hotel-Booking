@@ -206,7 +206,7 @@ export const deleteHotelByAdmin = async (req, res) => {
     if (owner && owner.role !== "admin") {
       owner.role = "user";
       owner.ownerRequestStatus = "none";
-      await owner.save();
+      await owner.save(); 
     }
 
     await Hotel.findByIdAndDelete(hotelId);

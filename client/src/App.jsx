@@ -20,6 +20,7 @@ import OwnerRequests from './pages/admin/OwnerRequests';
 import Hotels from './pages/admin/Hotels';
 import Rooms from './pages/admin/Rooms';
 import Loader from './Components/Loader';
+import SimplePage from "./pages/SimplePage";
 
 const App = () => {
   const pathname = useLocation().pathname;
@@ -54,8 +55,11 @@ const App = () => {
             <Route path='owner-requests' element={<OwnerRequests />} />
             <Route path='hotels' element={<Hotels />} />
             <Route path='rooms' element={<Rooms />} />
+            
           </Route>
+          <Route path='/:page' element={<SimplePage />} />
         </Routes>
+
       </div>
 
       {!isDashboardPath && <Footer />}
